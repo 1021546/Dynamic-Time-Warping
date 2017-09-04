@@ -1,36 +1,36 @@
-% ¦P¼Ë¤º®e­µÀÉªº©¼¦¹¶ZÂ÷¡A¥H¤Î¥ş³¡­µÀÉ©¼¦¹ªº¶ZÂ÷¡A¨Ã±Nµ²ªG¤À§O¼g¤Jhw3_check.txt¡Bhw3_result.txt¤¤
-% ¼g±o¤ñ¸ûÄê¡A·|¶]¤ñ¸û¤[
+% åŒæ¨£å…§å®¹éŸ³æª”çš„å½¼æ­¤è·é›¢ï¼Œä»¥åŠå…¨éƒ¨éŸ³æª”å½¼æ­¤çš„è·é›¢ï¼Œä¸¦å°‡çµæœåˆ†åˆ¥å¯«å…¥hw3_check.txtã€hw3_result.txtä¸­
+% å¯«å¾—æ¯”è¼ƒçˆ›ï¼Œæœƒè·‘æ¯”è¼ƒä¹…
 
 clear;
 clear global;
 
-template_num = 6; %°á´XºØ¤º®e
-template_num2 = 4; %¦³¦h¤Ö²Õtemplate
+template_num = 6; %å”¸å¹¾ç¨®å…§å®¹
+template_num2 = 4; %æœ‰å¤šå°‘çµ„template
 dtw_distance(template_num2, template_num, template_num2, template_num) = 0;
 dtw_accuracy(template_num2, template_num) = 0;
 
 for g = 1:template_num2
 	for w = 1:template_num
 
-		% ¨ú±o´ú¸Õ­µÀÉªº¯S¼x¦V¶q ----------------------------------------------
+		% å–å¾—æ¸¬è©¦éŸ³æª”çš„ç‰¹å¾µå‘é‡ ----------------------------------------------
 		fileName = ['wav/w', num2str(g-1), '_', num2str(w-1), '.wav'];
 		% fileName = ['fsdd/', num2str(w-1), '_jackson_', num2str(g-1), '.wav'];
 		[epd_y, fs, epd_start, epd_end, y] = my_epd(fileName);
 		feature_mfcc = my_mfcc(epd_y, fs);
 		[feature_size, frame_num] = size(feature_mfcc);
 
-		% ¼ÒªO ----------------------------------------------------------------
+		% æ¨¡æ¿ ----------------------------------------------------------------
 		for i2 = 1:template_num2
 			for i = 1:template_num
 
-				% ¨ú±otemplate­µÀÉªº¯S¼x¦V¶q¡A_tªí¥Ütemplate
+				% å–å¾—templateéŸ³æª”çš„ç‰¹å¾µå‘é‡ï¼Œ_tè¡¨ç¤ºtemplate
 				fileName_t = ['wav/w', num2str(i2-1), '_', num2str(i-1), '.wav'];
 				% fileName_t = ['fsdd/', num2str(i-1), '_jackson_', num2str(i2-1), '.wav'];
 				[epd_y_t, fs_t, epd_start_t, epd_end_t, y_t] = my_epd(fileName_t);
 				feature_mfcc_t = my_mfcc(epd_y_t, fs_t);
 				[feature_size_t, frame_num_t] = size(feature_mfcc_t);
 
-				% «Ø¥ßdtwªí®æ
+				% å»ºç«‹dtwè¡¨æ ¼
 				dtw_grid(frame_num, frame_num_t) = 0;
 				for j = 1:frame_num
 					for k = 1:frame_num_t
@@ -43,15 +43,15 @@ for g = 1:template_num2
 
 				clear global;
 				global dtw_grid2
-				dtw_grid2(frame_num, frame_num_t) = 0; %²Ö¿nªº
+				dtw_grid2(frame_num, frame_num_t) = 0; %ç´¯ç©çš„
 
-				% §@ªk¤@: »¼°j
+				% ä½œæ³•ä¸€: éè¿´
 				dtw_distance(g, w, i2, i) = dtw_grid_c(dtw_grid, frame_num, frame_num_t);
 
 				clear fileName_t epd_y_t fs_t feature_mfcc_t feature_size_t frame_num_t dtw_grid epd_start_t epd_end_t y_t;
 
 			end
-			% °O¤U¥¿½T²v
+			% è¨˜ä¸‹æ­£ç¢ºç‡
 			[temp_min, temp_min_index] = min(dtw_distance(g, w, i2, :));
 			if temp_min_index == w
 				dtw_accuracy(g, w) = dtw_accuracy(g, w) + 1;
@@ -64,15 +64,15 @@ for g = 1:template_num2
 	end
 end
 
-% ¼g¤Jµ²ªG --------------------------------------------------------------------
-% ÀË¬d°á¬Y­Ó¦rªº­µÀÉ©¼¦¹¶¡ªº¶ZÂ÷¡A­Y»P¨ä¥L­µÀÉ¶ZÂ÷¤jªí¥Ü¥i¯à¿ı¤£¦n:
+% å¯«å…¥çµæœ --------------------------------------------------------------------
+% æª¢æŸ¥å”¸æŸå€‹å­—çš„éŸ³æª”å½¼æ­¤é–“çš„è·é›¢ï¼Œè‹¥èˆ‡å…¶ä»–éŸ³æª”è·é›¢å¤§è¡¨ç¤ºå¯èƒ½éŒ„ä¸å¥½:
 % ...
 % 
 % wX_3:
 %     0_3 1_3 2_3 3_3 4_3
 % 0_3 
 % 1_3 
-% 2_3    ... ¶ZÂ÷ ...
+% 2_3    ... è·é›¢ ...
 % 3_3 
 % 4_3 
 % 
@@ -92,14 +92,14 @@ for w = 1:template_num
 end
 fclose(txt_check);
 
-% ¥ş³¡­µÀÉ©¼¦¹ªº¶ZÂ÷:
+% å…¨éƒ¨éŸ³æª”å½¼æ­¤çš„è·é›¢:
 % 
 %     0_0 0_1 0_2 0_3 0_4 1_0 1_1 1_2 ...
 % 0_0 
 % 0_1 
 % 0_2 
 % 0_3 
-% 0_4           ... ¶ZÂ÷ ...
+% 0_4           ... è·é›¢ ...
 % 0_5 
 % 1_0 
 % 1_1 
@@ -119,7 +119,7 @@ for g = 1:template_num2
 end
 fclose(txt_result);
 
-% ¦U­Ó­µÀÉ¥¿½T²v»P¦UºØ¤º®e¥¿½T²v:
+% å„å€‹éŸ³æª”æ­£ç¢ºç‡èˆ‡å„ç¨®å…§å®¹æ­£ç¢ºç‡:
 %
 clear temp_accuracy;
 txt_accuracy = fopen('hw3_accuracy.txt','w');
@@ -129,7 +129,7 @@ for g = 1:template_num2
 		% fprintf(txt_accuracy, '%d_jackson_%d: %d/%d(%4.2f%%)\n', w-1, g-1, dtw_accuracy(g, w)-1, template_num2-1, (dtw_accuracy(g, w)-1)/(template_num2-1)*100);
 	end
 end
-fprintf(txt_accuracy, '\n\r');
+fprintf(txt_accuracy, '\n');
 temp_accuracy(template_num) = 0;
 for w = 1:template_num
 	for g = 1:template_num2
